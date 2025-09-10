@@ -152,7 +152,6 @@ flag{example_flag_here}
 ---
 
 ## Key Takeaways
-- Always check user input bounds to avoid buffer overflows.
 - `gets()` is inherently unsafe and should **never** be used.
 - Ghidra is a powerful tool for reverse engineering and identifying vulnerable code paths.
-Note: for walkthrough go thorugh asciinema .cast file
+- Note: for walkthrough go thorugh asciinema .cast file
