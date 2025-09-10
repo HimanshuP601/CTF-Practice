@@ -1,0 +1,65 @@
+main : 
+
+/* WARNING: Function: __x86.get_pc_thunk.bx replaced with injection: get_pc_thunk_bx */
+/* WARNING: Globals starting with '_' overlap smaller symbols at the same address */
+
+undefined4 main(void)
+
+{
+  int iVar1;
+  char local_43 [43];
+  int local_18;
+  undefined4 local_14;
+  undefined1 *local_10;
+  
+  local_10 = &stack0x00000004;
+  setvbuf(_stdout,(char *)0x2,0,0);
+  local_14 = 2;
+  local_18 = 0;
+  puts(
+      "Stop! Who would cross the Bridge of Death must answer me these questions three, ere the other  side he see."
+      );
+  puts("What... is your name?");
+  fgets(local_43,0x2b,_stdin);
+  iVar1 = strcmp(local_43,"Sir Lancelot of Camelot\n");
+  if (iVar1 != 0) {
+    puts("I don\'t know that! Auuuuuuuugh!");
+                    /* WARNING: Subroutine does not return */
+    exit(0);
+  }
+  puts("What... is your quest?");
+  fgets(local_43,0x2b,_stdin);
+  iVar1 = strcmp(local_43,"To seek the Holy Grail.\n");
+  if (iVar1 != 0) {
+    puts("I don\'t know that! Auuuuuuuugh!");
+                    /* WARNING: Subroutine does not return */
+    exit(0);
+  }
+  puts("What... is my secret?");
+  gets(local_43);
+  if (local_18 == -0x215eef38) {
+    print_flag();
+  }
+  else {
+    puts("I don\'t know that! Auuuuuuuugh!");
+  }
+  return 0;
+}
+
+printf_flag:
+void print_flag(void)
+
+{
+  FILE *__fp;
+  int iVar1;
+  
+  puts("Right. Off you go.");
+  __fp = fopen("flag.txt","r");
+  while( true ) {
+    iVar1 = _IO_getc(__fp);
+    if ((char)iVar1 == -1) break;
+    putchar((int)(char)iVar1);
+  }
+  putchar(10);
+  return;
+}
