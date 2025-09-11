@@ -1,0 +1,21 @@
+main:
+
+undefined8 main(void)
+
+{
+  char local_28 [32];
+  
+  puts("Do you gets it??");
+  gets(local_28);
+  return 0;
+}
+
+give_shell:
+
+void give_shell(void)
+
+{
+  system("/bin/bash");
+  return;
+}
+
