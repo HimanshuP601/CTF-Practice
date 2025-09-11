@@ -1,0 +1,38 @@
+main: 
+
+undefined4 main(void)
+
+{
+  undefined1 local_31 [20];
+  undefined1 local_1d [20];
+  undefined4 local_9;
+  undefined1 local_5;
+  
+  setvbuf(stdout,(char *)0x0,2,0x14);
+  puts("----------- Welcome to vuln-chat -------------");
+  printf("Enter your username: ");
+  local_9 = 0x73303325;
+  local_5 = 0;
+  __isoc99_scanf(&local_9,local_1d);
+  printf("Welcome %s!\n",local_1d);
+  puts("Connecting to \'djinn\'");
+  sleep(1);
+  puts("--- \'djinn\' has joined your chat ---");
+  puts("djinn: I have the information. But how do I know I can trust you?");
+  printf("%s: ",local_1d);
+  __isoc99_scanf(&local_9,local_31);
+  puts("djinn: Sorry. That\'s not good enough");
+  fflush(stdout);
+  return 0;
+}
+
+printFlag:
+
+void printFlag(void)
+
+{
+  system("/bin/cat ./flag.txt");
+  puts("Use it wisely");
+  return;
+}
+

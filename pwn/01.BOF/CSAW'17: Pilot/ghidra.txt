@@ -1,0 +1,61 @@
+entry:
+
+void processEntry entry(undefined8 param_1,undefined8 param_2)
+
+{
+  undefined1 auStack_8 [8];
+  
+  __libc_start_main(FUN_004009a6,param_2,&stack0x00000008,FUN_00400b90,FUN_00400c00,param_1,
+                    auStack_8);
+  do {
+                    /* WARNING: Do nothing block with infinite loop */
+  } while( true );
+}
+
+main :
+
+undefined8 FUN_004009a6(void)
+
+{
+  ostream *poVar1;
+  ssize_t sVar2;
+  undefined8 uVar3;
+  undefined1 local_28 [32];
+  
+  setvbuf(stdout,(char *)0x0,2,0);
+  setvbuf(stdin,(char *)0x0,2,0);
+  poVar1 = std::operator<<((ostream *)std::cout,"[*]Welcome DropShip Pilot...");
+  std::ostream::operator<<(poVar1,std::endl<>);
+  poVar1 = std::operator<<((ostream *)std::cout,"[*]I am your assitant A.I....");
+  std::ostream::operator<<(poVar1,std::endl<>);
+  poVar1 = std::operator<<((ostream *)std::cout,"[*]I will be guiding you through the tutorial....")
+  ;
+  std::ostream::operator<<(poVar1,std::endl<>);
+  poVar1 = std::operator<<((ostream *)std::cout,
+                           "[*]As a first step, lets learn how to land at the designated location... ."
+                          );
+  std::ostream::operator<<(poVar1,std::endl<>);
+  poVar1 = std::operator<<((ostream *)std::cout,
+                           "[*]Your mission is to lead the dropship to the right location and execut e sequence of instructions to save Marines & Medics..."
+                          );
+  std::ostream::operator<<(poVar1,std::endl<>);
+  poVar1 = std::operator<<((ostream *)std::cout,"[*]Good Luck Pilot!....");
+  std::ostream::operator<<(poVar1,std::endl<>);
+  poVar1 = std::operator<<((ostream *)std::cout,"[*]Location:");
+  poVar1 = (ostream *)std::ostream::operator<<(poVar1,local_28);
+  std::ostream::operator<<(poVar1,std::endl<>);
+  std::operator<<((ostream *)std::cout,"[*]Command:");
+  sVar2 = read(0,local_28,0x40);
+  if (sVar2 < 5) {
+    poVar1 = std::operator<<((ostream *)std::cout,"[*]There are no commands....");
+    std::ostream::operator<<(poVar1,std::endl<>);
+    poVar1 = std::operator<<((ostream *)std::cout,"[*]Mission Failed....");
+    std::ostream::operator<<(poVar1,std::endl<>);
+    uVar3 = 0xffffffff;
+  }
+  else {
+    uVar3 = 0;
+  }
+  return uVar3;
+}
+
