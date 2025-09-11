@@ -1,0 +1,26 @@
+main :
+
+void main(void)
+
+{
+  char local_88 [64];
+  char local_48 [64];
+  
+  write(1,"-Warm Up-\n",10);
+  write(1,&DAT_0040074c,4);
+  sprintf(local_88,"%p\n",easy);
+  write(1,local_88,9);
+  write(1,&DAT_00400755,1);
+  gets(local_48);
+  return;
+}
+
+easy : 
+
+void easy(void)
+
+{
+  system("cat flag.txt");
+  return;
+}
+

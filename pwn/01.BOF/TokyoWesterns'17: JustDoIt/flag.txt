@@ -1,0 +1,1 @@
+ctf{my_custom_flag}

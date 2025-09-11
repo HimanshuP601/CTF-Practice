@@ -1,0 +1,45 @@
+main: 
+
+undefined4 main(void)
+
+{
+  char *pcVar1;
+  int iVar2;
+  char local_28 [16];
+  FILE *local_18;
+  char *local_14;
+  undefined1 *local_c;
+  
+  local_c = &stack0x00000004;
+  setvbuf(stdin,(char *)0x0,2,0);
+  setvbuf(stdout,(char *)0x0,2,0);
+  setvbuf(stderr,(char *)0x0,2,0);
+  local_14 = failed_message;
+  local_18 = fopen("flag.txt","r");
+  if (local_18 == (FILE *)0x0) {
+    perror("file open error.\n");
+                    /* WARNING: Subroutine does not return */
+    exit(0);
+  }
+  pcVar1 = fgets(flag,0x30,local_18);
+  if (pcVar1 == (char *)0x0) {
+    perror("file read error.\n");
+                    /* WARNING: Subroutine does not return */
+    exit(0);
+  }
+  puts("Welcome my secret service. Do you know the password?");
+  puts("Input the password.");
+  pcVar1 = fgets(local_28,0x20,stdin);
+  if (pcVar1 == (char *)0x0) {
+    perror("input error.\n");
+                    /* WARNING: Subroutine does not return */
+    exit(0);
+  }
+  iVar2 = strcmp(local_28,PASSWORD);
+  if (iVar2 == 0) {
+    local_14 = success_message;
+  }
+  puts(local_14);
+  return 0;
+}
+
