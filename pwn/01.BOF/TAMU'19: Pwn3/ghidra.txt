@@ -1,0 +1,20 @@
+main:
+undefined4 main(void)
+
+{
+  setvbuf(_stdout,(char *)0x2,0,0);
+  echo();
+  return 0;
+}
+
+echo :
+void echo(void)
+
+{
+  char local_12e [294];
+  
+  printf("Take this, you might need it on your journey %p!\n",local_12e);
+  gets(local_12e);
+  return;
+}
+

